@@ -169,8 +169,9 @@ int Hamming(){
       cont++;
     }
   return cont;
-  
-}}
+  }
+}
+
 
 
 void setup() {
@@ -182,7 +183,7 @@ void loop() {
   delay(10000); //Espera de 5 segundos
   updateArr();
   if (permiso()){
-    Serial.print("Hola");
+    Serial.print("Puede mover");
   }else{
     validarMovimiento();
   }
