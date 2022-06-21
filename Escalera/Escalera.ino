@@ -47,6 +47,12 @@ void ledV(){
   digitalWrite(12, LOW);
   digitalWrite(11, HIGH);
 }
+void term(){
+  digitalWrite(12, HIGH);
+  digitalWrite(11, HIGH);
+  delay(2000);
+  exit(0);
+}
 
 
 /**
@@ -99,7 +105,7 @@ void updateAnt(){
   Serial.println("Actualizada");
 }
 
-//Se eciende el led verde en caso de que pueda mover, ya que se ve que se tiene guardado el anterior estado.
+//Se enciende el led verde en caso de que pueda mover, ya que se ve que se tiene guardado el anterior estado.
 bool permiso(){
   bool perm = true;
   for(int x=0; x<7; x++){
@@ -123,7 +129,7 @@ void validarMovimiento(){
   //Validacion que no hay movido mas de una ficha
   if (Hamming() > 2){
     Serial.print("Se movieron más de 2 fichas");
-    //exit(0);
+    term();
   }else {
     validarCambio();
   }
@@ -143,16 +149,20 @@ void validarCambio(){
       r = x;
     }
   }
+  if (r==y){
+    println("Solo movio una ficha");
+    term();
+  }
   
   String izq = arrAnt[y].direcc;
   Serial.print("Izquierda" + izq);
   String der = arrAnt[r].direcc;
   if(izq.equals("L")){
     Serial.print("MOVIO UNA IZQUIERDA A LA DERECHA");
-    //exit(0);
+    term();
   }else if(der.equals("R")){
     Serial.print("MOVIO UNA DERECHA A LA IZQUIERDA");
-    //exit(0);
+    term();
   } else {
     Serial.print("Se hara cambio");
 
@@ -175,6 +185,19 @@ int Hamming(){
 }
 
 
+void valTab(){
+  String cadena ="";
+  for int (x=0; x<7; x++){
+    cadena +=arr[x].direcc;
+  }
+  if (cadena.equals("LLLXRRR")){
+    Serial.println("Gano :)");
+  }
+  if(cadena.rfind("RRLL")){
+    Serial.println("Sin opciones de ganar");
+  }
+}
+
 
 void setup() {
   Serial.begin(9600);
@@ -182,11 +205,14 @@ void setup() {
   ledV();
 }
 
+
+
 void loop() {
   delay(5000); //Espera de 5 segundos
   updateArr();
+  valTab();
   if (permiso()){
-    Serial.print("Puede mover");
+    Serial.println("Puede mover");
   }else{
     validarMovimiento();
   }
