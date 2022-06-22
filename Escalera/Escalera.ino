@@ -22,9 +22,6 @@ class ficha {
         estado = 0;
       }
     }
-    void pri(){
-      Serial.print(direcc);
-    }
   
 };
 
@@ -50,7 +47,7 @@ void ledV(){
 
 
 /**
- * Se ponen los pines del 2 al 9 como entradas
+ * Se ponen los pines del 2 al 8 como entradas
  * Mientras que el 11 y 12 serán salidas
  */
 void inicializar(){
@@ -145,16 +142,16 @@ void validarCambio(){
   }
   
   String izq = arrAnt[y].direcc;
-  Serial.print("Izquierda" + izq);
+  Serial.println("Izquierda" + izq);
   String der = arrAnt[r].direcc;
   if(izq.equals("L")){
-    Serial.print("MOVIO UNA IZQUIERDA A LA DERECHA");
+    Serial.println("MOVIO UNA IZQUIERDA A LA DERECHA");
     //exit(0);
   }else if(der.equals("R")){
-    Serial.print("MOVIO UNA DERECHA A LA IZQUIERDA");
+    Serial.println("MOVIO UNA DERECHA A LA IZQUIERDA");
     //exit(0);
   } else {
-    Serial.print("Se hara cambio");
+    Serial.println("Se hara cambio");
 
     arr[y].direcc = arrAnt[r].direcc;
     arr[r].direcc = arrAnt[y].direcc;
