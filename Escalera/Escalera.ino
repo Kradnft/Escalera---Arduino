@@ -28,6 +28,10 @@ class ficha {
   
 };
 
+int estadoAnimo(){
+  
+}
+
 //Variables globales
 int nPines = 7;
 int pines[] = {2,3,4,5,6,7,8};
@@ -150,7 +154,7 @@ void validarCambio(){
     }
   }
   if (r==y){
-    println("Solo movio una ficha");
+    Serial.println("Solo movio una ficha");
     term();
   }
   
@@ -180,20 +184,21 @@ int Hamming(){
     if(arr[x].estado != arrAnt[x].estado){
       cont++;
     }
-  return cont;
+  
   }
+  return cont;
 }
 
 
 void valTab(){
   String cadena ="";
-  for int (x=0; x<7; x++){
+  for (int x=0; x<7; x++){
     cadena +=arr[x].direcc;
   }
   if (cadena.equals("LLLXRRR")){
     Serial.println("Gano :)");
   }
-  if(cadena.rfind("RRLL")){
+  if(cadena.indexOf("RRLL") != -1){
     Serial.println("Sin opciones de ganar");
   }
 }
