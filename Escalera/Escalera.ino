@@ -25,6 +25,7 @@ class ficha {
   
 };
 
+
 //Variables globales
 int nPines = 7;
 int pines[] = {2,3,4,5,6,7,8};
@@ -99,7 +100,6 @@ void updateAnt(){
       //Nota tener cuidado de que si se pueda hacer así
       arrAnt[x] = arr[x];    
   }
-  Serial.println("Actualizada");
 }
 
 //Se enciende el led verde en caso de que pueda mover, ya que se ve que se tiene guardado el anterior estado.
@@ -108,7 +108,6 @@ bool permiso(){
   for(int x=0; x<7; x++){
     //En caso que haya cambio se debe actualizar, y esperar autorización para mover
     if(arr[x].estado != arrAnt[x].estado){
-      Serial.println("Cambio");
       perm = false;
       ledR();
       // break();
@@ -152,7 +151,6 @@ void validarCambio(){
   }
   
   String izq = arrAnt[y].direcc;
-  Serial.println("Izquierda" + izq);
   String der = arrAnt[r].direcc;
   if(izq.equals("L")){
     Serial.print("MOVIO UNA IZQUIERDA A LA DERECHA");
@@ -177,22 +175,49 @@ int Hamming(){
       cont++;
     }
   
-  }return cont;
+  }
+  return cont;
 }
 
 
-void valTab(){
+String aunPuede[] = {"RRXRLLL","RRLRXLL","RRLRLXL", "RRLXLRL","RXLRLRL","XRLRLRL","LRXRLRL", "LRLRXRL", "LRLRLRX", "LRLRLXR", "LRLXLRR", "LXLRLRR", "LLXRLRR", "LLLRXRR"};
+String perdio[] = {"XRRRLLL","RRLRLLX","RRLLLXR","LRLXRRL","LRLLXRR"};
+String casiPerdio[] = {"RXRRLLL","RRLLXRL","RRLLLRX"};
+
+String valTab(){
   String cadena ="";
   for (int x=0; x<7; x++){
     cadena +=arr[x].direcc;
   }
   if (cadena.equals("LLLXRRR")){
-    Serial.println("Gano :)");
+    return("Gano :)");
   }
-  //if(cadena.rfind("RRLL")){
-  //  Serial.println("Sin opciones de ganar");
-  //}
+  if(cadena.indexOf("RRLL") != -1){
+    return("Sin opciones de ganar");
+  }
+  if (cadena.equals("RRRXLLL")){
+    return("Iniciando");
+  } 
+  for (int x = 0; x<sizeof(aunPuede); x++){
+    if (aunPuede[x].equals(cadena)){
+      return ("Con opciones de ganar");
+    }
+  }
+  for (int x = 0; x<sizeof(perdio); x++){
+    if (perdio[x].equals(cadena)){
+      return ("Sin movimientos posibles, perdio");
+    }
+  }
+  for (int x = 0; x<sizeof(casiPerdio); x++){
+    if (casiPerdio[x].equals(cadena)){
+      return ("Sin opciones de ganar, aun puede mover");
+    }
+  }
 }
+
+
+
+
 
 
 void setup() {
@@ -209,6 +234,7 @@ void loop() {
   valTab();
   if (permiso()){
     Serial.println("Puede mover");
+    Serial.println(valTab());
   }else{
     validarMovimiento();
   }
