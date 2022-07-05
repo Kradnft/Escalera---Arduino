@@ -28,9 +28,6 @@ class ficha {
   
 };
 
-int estadoAnimo(){
-  
-}
 
 //Variables globales
 int nPines = 7;
@@ -189,19 +186,42 @@ int Hamming(){
   return cont;
 }
 
+String aunPuede[] = {"RRRXLLL","RRLRXLL","RRLRLXL", "RRLXLRL","RXLRLRL","XRLRLRL","LRXRLRL", "LRLRXRL", "LRLRLRX", "LRLRLXR", "LRLXLRR", "LXLRLRR", "LLXRLRR", "LLLRXRR"};
+String perdio[] = {"XRRRLLL","RRLRLLX","RRLLLXR","LRLXRRL","LRLLXRR"};
+String casiPerdio[] = {"RXRRLLL","RRLLXRL","RRLLLRX"};
 
-void valTab(){
+String valTab(){
   String cadena ="";
   for (int x=0; x<7; x++){
     cadena +=arr[x].direcc;
   }
   if (cadena.equals("LLLXRRR")){
-    Serial.println("Gano :)");
+    return("Gano :)");
   }
   if(cadena.indexOf("RRLL") != -1){
-    Serial.println("Sin opciones de ganar");
+    return("Sin opciones de ganar");
+  }
+  if (cadena.equals("RRRXLLL")){
+    return("Iniciando");
+  } 
+  for (int x = 0; x<sizeof(aunPuede); x++){
+    if (aunPuede[x].equals(cadena)){
+      return ("Con opciones de ganar");
+    }
+  }
+  for (int x = 0; x<sizeof(perdio); x++){
+    if (perdio[x].equals(cadena)){
+      return ("Sin movimientos posibles, perdio");
+    }
+  }
+  for (int x = 0; x<sizeof(casiPerdio); x++){
+    if (casiPerdio[x].equals(cadena)){
+      return ("Sin opciones de ganar, aun puede mover");
+    }
   }
 }
+
+
 
 
 void setup() {
@@ -218,6 +238,7 @@ void loop() {
   valTab();
   if (permiso()){
     Serial.println("Puede mover");
+    Serial.println(valTab());
   }else{
     validarMovimiento();
   }
