@@ -1,6 +1,9 @@
 body {
-    color: red;
+    color: #333;
     font-family: 'Times New Roman', Times, serif;
     font-size: larger;
-
+    background-color: antiquewhite;
 }
+h1 {
+    color: red;
+} 
