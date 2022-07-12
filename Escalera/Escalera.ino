@@ -149,6 +149,11 @@ void validarCambio(){
     Serial.println("Solo movio una ficha");
     term();
   }
+  int dif = abs(r-y);
+  if (dif > 2){
+    Serial.print("Movimiento muy largo");
+    term();
+  }
   
   String izq = arrAnt[y].direcc;
   String der = arrAnt[r].direcc;
@@ -180,9 +185,12 @@ int Hamming(){
 }
 
 
-String aunPuede[] = {"RRXRLLL","RRLRXLL","RRLRLXL", "RRLXLRL","RXLRLRL","XRLRLRL","LRXRLRL", "LRLRXRL", "LRLRLRX", "LRLRLXR", "LRLXLRR", "LXLRLRR", "LLXRLRR", "LLLRXRR"};
-String perdio[] = {"XRRRLLL","RRLRLLX","RRLLLXR","LRLXRRL","LRLLXRR"};
-String casiPerdio[] = {"RXRRLLL","RRLLXRL","RRLLLRX"};
+String aunPuede[] = {"RRXRLLL","RRLRXLL","RRLRLXL", "RRLXLRL","RXLRLRL","XRLRLRL","LRXRLRL", "LRLRXRL", "LRLRLRX", 
+"LRLRLXR", "LRLXLRR", "LXLRLRR", "LLXRLRR", "LLLRXRR"};
+String perdio[] = {"XRRRLLL","RRLRLLX","RRLLLXR","LRLXRRL","LRLLXRR", "LXRRLRL", "RLLXRRL", "RLLLXRR", "LXRRLRL", "RRLLLXR", "LXRRRLL", "LXRRRLL"};
+String casiPerdio[] = {"RXRRLLL","RRLLXRL","RRLLLRX", "RLXRLRL", "RLLRXRL", "XLRRLRL", "RLLRLRX", "RLLXLRR", "RLLRLXR", "RRLXRLL", "XLRRLRL", "RRLLRXL", 
+"RRLLRLX", "RRLLXLR", "RXLRRLL", "XRLRRLL", "LRXRRLL", "RLXRRLL", "XLRRRLL"};
+
 
 String valTab(){
   String cadena ="";
@@ -192,12 +200,16 @@ String valTab(){
   if (cadena.equals("LLLXRRR")){
     return("Gano :)");
   }
+  for (int x = 0; x<sizeof(casiPerdio); x++){
+    if (casiPerdio[x].equals(cadena)){
+      return ("Sin opciones de ganar, aun puede mover");
+    }
+  }
+
   if(cadena.indexOf("RRLL") != -1){
     return("Sin opciones de ganar");
   }
-  if (cadena.equals("RRRXLLL")){
-    return("Iniciando");
-  } 
+ 
   for (int x = 0; x<sizeof(aunPuede); x++){
     if (aunPuede[x].equals(cadena)){
       return ("Con opciones de ganar");
@@ -208,16 +220,10 @@ String valTab(){
       return ("Sin movimientos posibles, perdio");
     }
   }
-  for (int x = 0; x<sizeof(casiPerdio); x++){
-    if (casiPerdio[x].equals(cadena)){
-      return ("Sin opciones de ganar, aun puede mover");
-    }
-  }
+   if (cadena.equals("RRRXLLL")){
+    return("Iniciando");
+  }  
 }
-
-
-
-
 
 
 void setup() {
@@ -225,8 +231,6 @@ void setup() {
   inicializar();
   ledV();
 }
-
-
 
 void loop() {
   delay(5000); //Espera de 5 segundos
