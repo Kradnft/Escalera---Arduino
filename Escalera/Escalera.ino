@@ -182,7 +182,7 @@ int Hamming(){
 
 String aunPuede[] = {"RRXRLLL","RRLRXLL","RRLRLXL", "RRLXLRL","RXLRLRL","XRLRLRL","LRXRLRL", "LRLRXRL", "LRLRLRX", "LRLRLXR", "LRLXLRR", "LXLRLRR", "LLXRLRR", "LLLRXRR"};
 String perdio[] = {"XRRRLLL","RRLRLLX","RRLLLXR","LRLXRRL","LRLLXRR"};
-String casiPerdio[] = {"RXRRLLL","RRLLXRL","RRLLLRX"};
+String casiPerdio[] = {"RXRRLLL","RRLLXRL","RRLLLRX"}; //Cara preocupado
 
 String valTab(){
   String cadena ="";
