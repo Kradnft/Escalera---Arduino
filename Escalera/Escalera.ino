@@ -110,6 +110,7 @@ bool permiso(){
     if(arr[x].estado != arrAnt[x].estado){
       perm = false;
       ledR();
+      delay(5000);
       // break();
     }
   }
@@ -123,6 +124,7 @@ bool permiso(){
 
 void validarMovimiento(){
   //Validacion que no hay movido mas de una ficha
+  
   if (Hamming() > 2){
     Serial.print("Se movieron más de 2 fichas");
     term();
@@ -206,10 +208,6 @@ String valTab(){
     }
   }
 
-  if(cadena.indexOf("RRLL") != -1){
-    return("Sin opciones de ganar");
-  }
- 
   for (int x = 0; x<sizeof(aunPuede); x++){
     if (aunPuede[x].equals(cadena)){
       return ("Con opciones de ganar");
@@ -220,9 +218,12 @@ String valTab(){
       return ("Sin movimientos posibles, perdio");
     }
   }
-   if (cadena.equals("RRRXLLL")){
-    return("Iniciando");
-  }  
+  if(cadena.indexOf("RRLL") != -1){
+    return("Sin opciones de ganar");
+  } else {
+    return("Movimiento no reconocido");
+  }
+ 
 }
 
 
@@ -233,7 +234,7 @@ void setup() {
 }
 
 void loop() {
-  delay(5000); //Espera de 5 segundos
+  delay(1000); //Espera de 1 segundo
   updateArr();
   valTab();
   if (permiso()){
