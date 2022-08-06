@@ -61,7 +61,7 @@ void inicializar(){
   
   
   for(int x=0; x<nPines; x++){
-    pinMode(pines[x], INPUT);
+    pinMode(pines[x], INPUT_PULLUP);
   }
   
   pinMode(11,OUTPUT); //VERDE
@@ -86,14 +86,11 @@ void updateArr(){
         arr[x].estado = 1;
       }else {
         arr[x].estado = 0;
-      }
-      Serial.print(arr[x].estado);
-      
+      }      
   }
   for(int x=0; x<7; x++){
-      Serial.print(arr[x].direcc);    
+      Serial.print(arr[x].estado);    
   }
-  Serial.println("");
 }
 void updateAnt(){
   for(int x=0; x<7; x++){
@@ -110,6 +107,8 @@ bool permiso(){
     if(arr[x].estado != arrAnt[x].estado){
       perm = false;
       ledR();
+      Serial.println("Moviendo");
+      delay(7000);
       // break();
     }
   }
@@ -196,16 +195,13 @@ String valTab(){
   String cadena ="";
   for (int x=0; x<7; x++){
     cadena +=arr[x].direcc;
-  }
+    }
+
   if (cadena.equals("LLLXRRR")){
     return("Gano :)");
+    Serial.println("Gano :");
   }
-  for (int x = 0; x<sizeof(casiPerdio); x++){
-    if (casiPerdio[x].equals(cadena)){
-      return ("Sin opciones de ganar, aun puede mover");
-    }
-  }
-
+  
   if(cadena.indexOf("RRLL") != -1){
     return("Sin opciones de ganar");
   }
@@ -215,6 +211,11 @@ String valTab(){
       return ("Con opciones de ganar");
     }
   }
+  for (int x = 0; x<sizeof(casiPerdio); x++){
+    if (casiPerdio[x].equals(cadena)){
+      return ("Sin opciones de ganar, aun puede mover");
+    }
+  }
   for (int x = 0; x<sizeof(perdio); x++){
     if (perdio[x].equals(cadena)){
       return ("Sin movimientos posibles, perdio");
@@ -222,7 +223,8 @@ String valTab(){
   }
    if (cadena.equals("RRRXLLL")){
     return("Iniciando");
-  }  
+  } else
+ {return ("Moviemiento no encontrado");}
 }
 
 
@@ -233,13 +235,12 @@ void setup() {
 }
 
 void loop() {
-  delay(5000); //Espera de 5 segundos
+  delay(1000); //Espera de 5 segundos
   updateArr();
-  valTab();
   if (permiso()){
-    Serial.println("Puede mover");
     Serial.println(valTab());
   }else{
+    updateArr();
     validarMovimiento();
   }
   updateAnt();
