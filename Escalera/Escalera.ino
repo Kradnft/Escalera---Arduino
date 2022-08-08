@@ -109,6 +109,7 @@ bool permiso(){
       ledR();
       Serial.println("Moviendo");
       delay(7000);
+
       // break();
     }
   }
@@ -122,6 +123,7 @@ bool permiso(){
 
 void validarMovimiento(){
   //Validacion que no hay movido mas de una ficha
+  
   if (Hamming() > 2){
     Serial.print("Se movieron más de 2 fichas");
     term();
@@ -186,9 +188,9 @@ int Hamming(){
 
 String aunPuede[] = {"RRXRLLL","RRLRXLL","RRLRLXL", "RRLXLRL","RXLRLRL","XRLRLRL","LRXRLRL", "LRLRXRL", "LRLRLRX", 
 "LRLRLXR", "LRLXLRR", "LXLRLRR", "LLXRLRR", "LLLRXRR"};
-String perdio[] = {"XRRRLLL","RRLRLLX","RRLLLXR","LRLXRRL","LRLLXRR", "LXRRLRL", "RLLXRRL", "RLLLXRR", "LXRRLRL", "RRLLLXR", "LXRRRLL", "LXRRRLL"};
+String perdio[] = {"XRRRLLL","RRLRLLX","RRLLLXR","LRLLXRR", "LXRRLRL", "RLLXRRL", "RLLLXRR", "LXRRLRL", "RRLLLXR", "LXRRRLL", "LXRRRLL", "LLXRRRL"};
 String casiPerdio[] = {"RXRRLLL","RRLLXRL","RRLLLRX", "RLXRLRL", "RLLRXRL", "XLRRLRL", "RLLRLRX", "RLLXLRR", "RLLRLXR", "RRLXRLL", "XLRRLRL", "RRLLRXL", 
-"RRLLRLX", "RRLLXLR", "RXLRRLL", "XRLRRLL", "LRXRRLL", "RLXRRLL", "XLRRRLL"};
+"RRLLRLX", "RRLLXLR", "RXLRRLL", "XRLRRLL", "LRXRRLL", "RLXRRLL", "XLRRRLL", "LRLXRRL", "LXLRRRL"};
 
 
 String valTab(){
@@ -201,11 +203,7 @@ String valTab(){
     return("Gano :)");
     Serial.println("Gano :");
   }
-  
-  if(cadena.indexOf("RRLL") != -1){
-    return("Sin opciones de ganar");
-  }
- 
+
   for (int x = 0; x<sizeof(aunPuede); x++){
     if (aunPuede[x].equals(cadena)){
       return ("Con opciones de ganar");
@@ -223,8 +221,15 @@ String valTab(){
   }
    if (cadena.equals("RRRXLLL")){
     return("Iniciando");
-  } else
- {return ("Moviemiento no encontrado");}
+  } 
+  if(cadena.indexOf("RRLL") != -1){
+    return("Sin opciones de ganar");
+  }
+  else{
+    return ("Moviemiento no encontrado");
+  }
+  
+ 
 }
 
 
@@ -235,7 +240,8 @@ void setup() {
 }
 
 void loop() {
-  delay(1000); //Espera de 5 segundos
+
+  delay(500); //Espera de 1/2 segundo
   updateArr();
   if (permiso()){
     Serial.println(valTab());
