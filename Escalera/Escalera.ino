@@ -31,8 +31,9 @@ int nPines = 7;
 int pines[] = {2,3,4,5,6,7,8};
 ficha arr[7];
 ficha arrAnt[7];
-
+int cero = 0;
 int cont = 0;
+int vidas = 5;
 
 //Encender led rojo
 void ledR(){
@@ -86,6 +87,7 @@ void updateArr(){
         arr[x].estado = 1;
       }else {
         arr[x].estado = 0;
+        cero = x;
       }      
   }
   for(int x=0; x<7; x++){
@@ -108,7 +110,15 @@ bool permiso(){
       perm = false;
       ledR();
       Serial.println("Moviendo");
-      delay(7000);
+      //A probar
+      bool cambio = false;
+      while(!cambio){
+        int value = digitalRead(arr[cero].pin);
+        if (value == HIGH){
+          cambio= true;
+        }
+      }
+
 
       // break();
     }
@@ -186,11 +196,13 @@ int Hamming(){
 }
 
 
-String aunPuede[] = {"RRXRLLL","RRLRXLL","RRLRLXL", "RRLXLRL","RXLRLRL","XRLRLRL","LRXRLRL", "LRLRXRL", "LRLRLRX", 
-"LRLRLXR", "LRLXLRR", "LXLRLRR", "LLXRLRR", "LLLRXRR"};
-String perdio[] = {"XRRRLLL","RRLRLLX","RRLLLXR","LRLLXRR", "LXRRLRL", "RLLXRRL", "RLLLXRR", "LXRRLRL", "RRLLLXR", "LXRRRLL", "LXRRRLL", "LLXRRRL"};
+String aunPuede[] = {"RRXRLLL","RRLRXLL","RRLRLXL", "RRLXLRL","RXLRLRL","XRLRLRL","LRXRLRL", "LRLRXRL", "LRLRLRX", "LRLRLXR", "LRLXLRR", "LXLRLRR", "LLXRLRR", "LLLRXRR", "RXRLRLL", "RLRXRLL", "RLRLRXL", "RLRLRLX", "RLRLXLR", "RLXLRLR", "XLRLRLR", "LXRLRLR", "LLRXRLR","LLRLRXR", "LLRLXRR", "LLXLRRR"]
+};
+String perdio[] = {"XRRRLLL","RRLRLLX","RRLLLXR","LRLLXRR", "LXRRLRL", "RLLXRRL", "RLLLXRR", "LXRRLRL", "RRLLLXR", "LXRRRLL", "LXRRRLL", "LLXRRRL", "RLLXRRL","RRRLLLX"
+"XRRLRLL", "LXRRRLL", "RLLLXRR", "LLXRRLR", "RLRLLXR", "RLLXRRL"};
 String casiPerdio[] = {"RXRRLLL","RRLLXRL","RRLLLRX", "RLXRLRL", "RLLRXRL", "XLRRLRL", "RLLRLRX", "RLLXLRR", "RLLRLXR", "RRLXRLL", "XLRRLRL", "RRLLRXL", 
-"RRLLRLX", "RRLLXLR", "RXLRRLL", "XRLRRLL", "LRXRRLL", "RLXRRLL", "XLRRRLL", "LRLXRRL", "LXLRRRL"};
+"RRLLRLX", "RRLLXLR", "RXLRRLL", "XRLRRLL", "LRXRRLL", "RLXRRLL", "XLRRRLL", "LRLXRRL", "LXLRRRL", "RRRLLXL", "RLXRRLL", "XLRRRLL", "RLLXRLR", "RLLLRXR","RLRLXRL",
+"RLXLRRL", "RLRLLRX"};
 
 
 String valTab(){
