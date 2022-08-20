@@ -32,8 +32,9 @@ int pines[] = {2,3,4,5,6,7,8};
 ficha arr[7];
 ficha arrAnt[7];
 int cero = 0;
+int ceroAnt =0;
 int cont = 0;
-int vidas = 5;
+// int vidas = 5;
 
 //Encender led rojo
 void ledR(){
@@ -81,13 +82,20 @@ void inicializar(){
 
 
 void updateArr(){
+  ceroAnt = cero;
+  cero = -1;
   for(int x=0; x<7; x++){
     int value = digitalRead(arr[x].pin);
       if(value == HIGH){
         arr[x].estado = 1;
       }else {
         arr[x].estado = 0;
-        cero = x;
+        if (cero=-1){
+          cero = x;
+        } else{
+          ceroAnt = x;
+        }
+        
       }      
   }
   for(int x=0; x<7; x++){
@@ -110,12 +118,19 @@ bool permiso(){
       perm = false;
       ledR();
       Serial.println("Moviendo");
+      delay(200);
       //A probar
       bool cambio = false;
       while(!cambio){
         int value = digitalRead(arr[cero].pin);
         if (value == HIGH){
           cambio= true;
+        }
+        else {
+          int value2 = digitalRead(arr[ceroAnt].pin);
+          if (value2 == HIGH){
+          cambio= true;
+          }
         }
       }
 
@@ -146,6 +161,7 @@ void validarMovimiento(){
 
 void validarCambio(){
   int y = -1;
+  int cont = 0;
   int r = 0;
   for(int x=0; x<7; x++){
     //En caso que haya cambio se debe actualizar, y esperar autorización para mover
@@ -154,10 +170,12 @@ void validarCambio(){
         y = x;
       ledR();
       r = x;
+      cont = cont + 1;
     }
   }
   if (r==y){
     Serial.println("Solo movio una ficha");
+    
     term();
   }
   int dif = abs(r-y);
@@ -168,7 +186,8 @@ void validarCambio(){
   
   String izq = arrAnt[y].direcc;
   String der = arrAnt[r].direcc;
-  if(izq.equals("L")){
+  if (cont != 0){
+    if(izq.equals("L")){
     Serial.print("MOVIO UNA IZQUIERDA A LA DERECHA");
     term();
   }else if(der.equals("R")){
@@ -178,13 +197,20 @@ void validarCambio(){
     Serial.println("Se hara cambio");
     arr[y].direcc = arrAnt[r].direcc;
     arr[r].direcc = arrAnt[y].direcc;
+    delay(500);
   }
+  }
+  else {
+    Serial.println("Misma posicion");
+  }
+  
 
 }
 
 
 int Hamming(){
   cont = 0;
+  
   for(int x=0; x<7; x++){
     //En caso que haya cambio se debe actualizar, y esperar autorización para mover
     if(arr[x].estado != arrAnt[x].estado){
@@ -196,44 +222,45 @@ int Hamming(){
 }
 
 
-String aunPuede[] = {"RRXRLLL","RRLRXLL","RRLRLXL", "RRLXLRL","RXLRLRL","XRLRLRL","LRXRLRL", "LRLRXRL", "LRLRLRX", "LRLRLXR", "LRLXLRR", "LXLRLRR", "LLXRLRR", "LLLRXRR", "RXRLRLL", "RLRXRLL", "RLRLRXL", "RLRLRLX", "RLRLXLR", "RLXLRLR", "XLRLRLR", "LXRLRLR", "LLRXRLR","LLRLRXR", "LLRLXRR", "LLXLRRR"]
-};
-String perdio[] = {"XRRRLLL","RRLRLLX","RRLLLXR","LRLLXRR", "LXRRLRL", "RLLXRRL", "RLLLXRR", "LXRRLRL", "RRLLLXR", "LXRRRLL", "LXRRRLL", "LLXRRRL", "RLLXRRL","RRRLLLX"
+
+String aunPuede[] = {"RRXRLLL","RRLRXLL","RRLRLXL", "RRLXLRL","RXLRLRL","XRLRLRL","LRXRLRL", "LRLRXRL", "LRLRLRX", "LRLRLXR", "LRLXLRR", "LXLRLRR", "LLXRLRR", "LLLRXRR", "RXRLRLL", "RLRXRLL", "RLRLRXL", "RLRLRLX", "RLRLXLR", "RLXLRLR", "XLRLRLR", "LXRLRLR", "LLRXRLR","LLRLRXR", "LLRLXRR", "LLXLRRR"};
+//String aunPuede[] = {};
+
+String perdio[] = {"XRRRLLL", "RRLRLLX", "RRLLLXR","LRLLXRR", "LXRRLRL", "RLLXRRL", "RLLLXRR", "LXRRLRL", "RRLLLXR", "LXRRRLL", "LXRRRLL", "LLXRRRL", "RLLXRRL","RRRLLLX"
 "XRRLRLL", "LXRRRLL", "RLLLXRR", "LLXRRLR", "RLRLLXR", "RLLXRRL"};
-String casiPerdio[] = {"RXRRLLL","RRLLXRL","RRLLLRX", "RLXRLRL", "RLLRXRL", "XLRRLRL", "RLLRLRX", "RLLXLRR", "RLLRLXR", "RRLXRLL", "XLRRLRL", "RRLLRXL", 
-"RRLLRLX", "RRLLXLR", "RXLRRLL", "XRLRRLL", "LRXRRLL", "RLXRRLL", "XLRRRLL", "LRLXRRL", "LXLRRRL", "RRRLLXL", "RLXRRLL", "XLRRRLL", "RLLXRLR", "RLLLRXR","RLRLXRL",
-"RLXLRRL", "RLRLLRX"};
-
-
+//String casiPerdio[] = {"RLXRLRL", "RLLRXRL", "XLRRLRL", "RLLRLRX", "RLLXLRR", "RLLRLXR", "RRLXRLL", "XLRRLRL", "LRLXRRL", "LXLRRRL", "RLLXRLR", "RLLLRXR","RLRLXRL", "RLXLRRL", "RLRLLRX"};
+String casiPerdio [] = {};
 String valTab(){
+  
   String cadena ="";
   for (int x=0; x<7; x++){
     cadena +=arr[x].direcc;
     }
-
-  if (cadena.equals("LLLXRRR")){
+  if (cadena == "LLLXRRR" ){
     return("Gano :)");
     Serial.println("Gano :");
-  }
-
-  for (int x = 0; x<sizeof(aunPuede); x++){
-    if (aunPuede[x].equals(cadena)){
-      return ("Con opciones de ganar");
-    }
-  }
-  for (int x = 0; x<sizeof(casiPerdio); x++){
-    if (casiPerdio[x].equals(cadena)){
-      return ("Sin opciones de ganar, aun puede mover");
-    }
-  }
-  for (int x = 0; x<sizeof(perdio); x++){
-    if (perdio[x].equals(cadena)){
-      return ("Sin movimientos posibles, perdio");
-    }
   }
    if (cadena.equals("RRRXLLL")){
     return("Iniciando");
   } 
+
+  // while (x<sizeof(aunPuede));
+  for (int x = 0; x<(sizeof(aunPuede)/sizeof(aunPuede[0])); x++){
+    if (aunPuede[x].equals(cadena)){
+      return ("Con opciones de ganar");
+    }
+  }
+  
+  for (int x = 0; x<(sizeof(perdio)/sizeof(perdio[0])); x++){
+    if (perdio[x] == cadena){
+      return ("Sin movimientos posibles, perdio");
+    }
+  }
+  for (int x = 0; x<(sizeof(casiPerdio)/sizeof(casiPerdio[0])); x++){
+    if (perdio[x] == cadena){
+      return ("Sin movimientos posibles, perdio");
+    }
+  }
   if(cadena.indexOf("RRLL") != -1){
     return("Sin opciones de ganar");
   }
@@ -255,6 +282,7 @@ void loop() {
 
   delay(500); //Espera de 1/2 segundo
   updateArr();
+  delay(100);
   if (permiso()){
     Serial.println(valTab());
   }else{
