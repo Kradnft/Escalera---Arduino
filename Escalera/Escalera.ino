@@ -121,16 +121,24 @@ bool permiso(){
       delay(200);
       //A probar
       bool cambio = false;
+      if(cero==ceroAnt){
+        cero = -1;
+        for(int x=0; x<7; x++){
+          int value = digitalRead(arr[x].pin);
+          if(value != HIGH){
+            if (cero=-1){
+              cero = x;
+            } else{
+              ceroAnt = x;
+            }
+          }
+        }
+      }
       while(!cambio){
         int value = digitalRead(arr[cero].pin);
-        if (value == HIGH){
+        int value2 = digitalRead(arr[ceroAnt].pin);
+        if (value == HIGH || value2 == HIGH){
           cambio= true;
-        }
-        else {
-          int value2 = digitalRead(arr[ceroAnt].pin);
-          if (value2 == HIGH){
-          cambio= true;
-          }
         }
       }
 
